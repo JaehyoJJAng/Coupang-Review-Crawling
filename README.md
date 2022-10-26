@@ -1,6 +1,6 @@
 # Coupang-Review-Crawling
 
-<p>파이썬을 이용한 쿠팡 크롤링 프로그램</p>
+<p>파이썬을 이용한 쿠팡 리뷰 크롤링 프로그램</p>
 
 <h1>설치 | Installation</h1>
 <pre>
