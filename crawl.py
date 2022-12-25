@@ -155,3 +155,8 @@ class OpenPyXL:
         wb.close()
 
         print(f'파일 저장완료!\n\n{os.path.join(savePath,fileName)}')
+
+
+def test():
+    print("Test")
+
