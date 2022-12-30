@@ -1,9 +1,28 @@
-import requests as rq
 from bs4 import BeautifulSoup as bs
-import time,os,re,json
+from pathlib import Path
+from typing import Optional
 from typing import Union
-from config import headers
 from openpyxl import Workbook
+import time
+import os
+import re
+import requests as rq
+import json
+
+
+def get_headers(key: str,default_value: Optional[str] = None):
+    """ Get Headers """
+    JSON_FILE = 'json/headers.json'
+
+    with open(JSON_FILE,'r',encoding='UTF-8') as file:
+        headers = json.loads(file.read())
+
+    try :
+        return headers[key]
+    except:
+        if default_value:
+            return default_value
+        raise EnvironmentError(f'Set the {key}')
 
 class Coupang:
     @staticmethod
@@ -12,15 +31,15 @@ class Coupang:
         prod_code = url.split('products/')[-1].split('?')[0]
         return prod_code
 
-    def __init__(self):
-        self.__headers = headers.get_headers(key='headers')
+    def __init__(self)-> None:
+        self.__headers : dict = get_headers(key='headers')
 
     def main(self)-> list:
         # URL 주소
-        URL = self.input_review_url()
+        URL : str = self.input_review_url()
 
         # URL의 Product Code 추출
-        prod_code = self.get_product_code(url=URL)
+        prod_code : str = self.get_product_code(url=URL)
 
         # URL 주소 재가공
         URLS = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
@@ -124,7 +143,7 @@ class Coupang:
 
 class OpenPyXL:
     @staticmethod
-    def save_file():
+    def save_file()-> None:
         # 크롤링 결과
         results : list = Coupang().main()
 

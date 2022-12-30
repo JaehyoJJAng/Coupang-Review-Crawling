@@ -3,32 +3,39 @@
 <p>파이썬을 이용한 쿠팡 리뷰 크롤링 프로그램</p>
 
 <h1>설치 | Installation</h1>
-<pre>
-<code>
+
+```
 $ git clone https://github.com/JaehyoJJAng/Coupang-Review-Crawling.git
 $ cd Coupang-Review-Crawling
 $ pip install -r ./requirements.txt
-</code>
-</pre>
+```
 
 <h1>사용방법 | Usage</h1>
 <p><strong>사용방법 | How to use</strong></p>
-<pre>
-<code>
-$ python3 main.py
-</code>
-</pre>
 
-<h2>URL 입력</h2>
+```
+$ python3 main.py
+```
+
+<br>
+
+> ## URL 입력<br>
+
 <img width="1417" alt="image" src="https://user-images.githubusercontent.com/91415701/197674856-31baa0b0-90b6-4cf9-9f3b-d5039ddc62ca.png">
-</hr>
+
+<br>
+
 <h2>페이지 수 입력</h2>
 <img width="226" alt="image" src="https://user-images.githubusercontent.com/91415701/197675042-c7101429-ae90-4a02-bc49-81807efa69c7.png">
 </hr>
 
-<p>출력 결과 | Print</p>
-<pre>
-<code>
+<br>
+
+***
+
+> ## 출력 결과 | Print
+
+```
 {'prod_name': '힘내바 초코 스니커즈, 40g, 12개', 'user_name': '이명희', 'rating': 4, 'headline': '등록된 헤드라인이 없습니다', 'review_content': '일반 초코바 크기랑 같아요이가 좋지않은데도 씹기힘들지않고사르륵 부서져요안에 건과가 있어서 고소해요얼집에서 일하는데 중간에 당떨어져서생각나서 삿는데 은근히 양이 좀되네요ㅎㅎ', 'answer': '괜찮아요'}
 
 {'prod_name': '힘내바 초코 스니커즈, 40g, 12개', 'user_name': '0wisdom0', 'rating': 5, 'headline': '힘내바~!', 'review_content': '살까말까 살까말까ㅋㅋ장바구니 담아놨다가 결국 결제하기~!ㅋㅋ여름이라 초코바 사두기가 고민이 됐어요ㅋ눅진눅진 해질것도 그렇고..아이들 초코바 쥐어주면 엉망될까 싶기도 하고~^^;근데 초코가 땡기는 날 결제를 하고 있는 나..ㅋ한번에 다 꺼내먹지 못하게 냉장고 젤 윗칸에 킵~!하나 맛보기로 받자마자 뜯어봅니다..ㅋ울퉁불퉁한표면..여름은 여름인가봅니다..손으로 집어 돌리는 순간 손가락에 묻어나오는 쬬꼬ㅠㅠ얼른 입에 쏙 넣어야 할까봐요~ㅋㅋ맛은..씨리얼 초코에 말아먹는 맛이에요~^^*근데 엄청 달거나 그러지 않고 생각보다 적당히 달달하니..씨리얼의 고소한맛도 나서..하나 다 먹어도 또 생각이 나네요~^^*아이들도 잘 먹어요~ㅋ힘내바~! 문구에 힘도 나는듯요ㅋㅋ회사 직원들 나눠주면 좋을 것 같아 한박스 더 사려고 들어갔더니 이틀째 품절이네요ㅠㅠ재입고알람신청 해두고 입고되면 한박스 더~!ㅋㅋ', 'answer': '예상보다 맛있어요'}
@@ -42,5 +49,4 @@ $ python3 main.py
 파일 저장완료!
 
 /Users/jaehyolee/PycharmProjects/pythonProject/02_크롤링 프로젝트(Class)/55_쿠팡 상품리뷰 크롤링/쿠팡-상품리뷰-크롤링/힘내바 초코 스니커즈, 40g, 12개.xlsx
-</code>
-</pre>
+```

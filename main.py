@@ -1,3 +1,4 @@
-from crawl import OpenPyXL
+from src.crawl import OpenPyXL
+
 if __name__ == '__main__':
-    app = OpenPyXL.save_file()
+    OpenPyXL.save_file()
