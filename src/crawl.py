@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup as bs
 from pathlib import Path
-from typing import Optional
-from typing import Union
+from typing import Optional,Union,Dict,List
 from openpyxl import Workbook
 import time
 import os
@@ -9,13 +8,15 @@ import re
 import requests as rq
 import json
 
-
-def get_headers(key: str,default_value: Optional[str] = None):
+def get_headers(
+    key: str,
+    default_value: Optional[str] = None
+    )-> Dict[str,Dict[str,str]]:
     """ Get Headers """
-    JSON_FILE = 'json/headers.json'
+    JSON_FILE : str = 'json/headers.json'
 
     with open(JSON_FILE,'r',encoding='UTF-8') as file:
-        headers = json.loads(file.read())
+        headers : Dict[str,Dict[str,str]] = json.loads(file.read())
 
     try :
         return headers[key]
@@ -28,13 +29,13 @@ class Coupang:
     @staticmethod
     def get_product_code(url: str)-> str:
         """ 입력받은 URL 주소의 PRODUCT CODE 추출하는 메소드 """
-        prod_code = url.split('products/')[-1].split('?')[0]
+        prod_code : str = url.split('products/')[-1].split('?')[0]
         return prod_code
 
     def __init__(self)-> None:
-        self.__headers : dict = get_headers(key='headers')
+        self.__headers : Dict[str,str] = get_headers(key='headers')
 
-    def main(self)-> list:
+    def main(self)-> List[List[Dict[str,Union[str,int]]]]:
         # URL 주소
         URL : str = self.input_review_url()
 
@@ -42,7 +43,7 @@ class Coupang:
         prod_code : str = self.get_product_code(url=URL)
 
         # URL 주소 재가공
-        URLS = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
+        URLS : List[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
 
         # __headers에 referer 키 추가
         self.__headers['referer'] = URL
@@ -50,8 +51,8 @@ class Coupang:
         with rq.Session() as session:
             return [self.fetch(url=url,session=session) for url in URLS]
 
-    def fetch(self,url:str,session)-> list:
-        save_data = list()
+    def fetch(self,url:str,session)-> List[Dict[str,Union[str,int]]]:
+        save_data : List[Dict[str,Union[str,int]]] = list()
 
         with session.get(url=url,headers=self.__headers) as response :
             html = response.text
@@ -61,7 +62,7 @@ class Coupang:
             article_lenth = len(soup.select('article.sdp-review__article__list'))
 
             for idx in range(article_lenth):
-                dict_data = dict()
+                dict_data : Dict[str,Union[str,int]] = dict()
                 articles = soup.select('article.sdp-review__article__list')
 
                 # 구매자 이름
@@ -124,7 +125,7 @@ class Coupang:
     def input_review_url(self)-> str:
         while True:
             os.system('clear')
-            review_url = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/6451503812?itemId=14007944553&vendorItemId=73528488680&sourceType=srp_product_ads&clickEventId=28aaab30-71e3-4f30-9059-07a29eb1b27f&korePlacement=15&koreSubPlacement=6&q=%EB%9E%A9%EB%85%B8%EC%89%AC&itemsCount=36&searchId=af6bda06076947a39f847ed86a718c34&rank=5&isAddedCart=\n\n:')
+            review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/6451503812?itemId=14007944553&vendorItemId=73528488680&sourceType=srp_product_ads&clickEventId=28aaab30-71e3-4f30-9059-07a29eb1b27f&korePlacement=15&koreSubPlacement=6&q=%EB%9E%A9%EB%85%B8%EC%89%AC&itemsCount=36&searchId=af6bda06076947a39f847ed86a718c34&rank=5&isAddedCart=\n\n:')
             if not review_url :
                 os.system('clear')
                 print('URL 주소가 입력되지 않았습니다')
@@ -134,7 +135,7 @@ class Coupang:
     def input_page_count(self)-> int:
         os.system('clear')
         while True:
-            page_count = input('페이지 수를 입력하세요\n\n:')
+            page_count : str = input('페이지 수를 입력하세요\n\n:')
             if not page_count:
                 print('페이지 수가 입력되지 않았습니다\n')
                 continue
@@ -145,7 +146,7 @@ class OpenPyXL:
     @staticmethod
     def save_file()-> None:
         # 크롤링 결과
-        results : list = Coupang().main()
+        results : List[List[Dict[str,Union[str,int]]]] = Coupang().main()
 
         wb = Workbook()
         ws = wb.active
@@ -164,8 +165,8 @@ class OpenPyXL:
 
                 row += 1
 
-        savePath = os.path.abspath('쿠팡-상품리뷰-크롤링')
-        fileName = results[0][0]['prod_name'] + '.xlsx'
+        savePath : str = os.path.abspath('쿠팡-상품리뷰-크롤링')
+        fileName : str = results[0][0]['prod_name'] + '.xlsx'
 
         if not os.path.exists(savePath):
             os.mkdir(savePath)
