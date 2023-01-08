@@ -50,3 +50,8 @@ $ python3 main.py
 
 /Users/jaehyolee/PycharmProjects/pythonProject/02_크롤링 프로젝트(Class)/55_쿠팡 상품리뷰 크롤링/쿠팡-상품리뷰-크롤링/힘내바 초코 스니커즈, 40g, 12개.xlsx
 ```
+
+
+***
+
+> ## 해당 프로그램을 상업적인 목적으로 이용하여 생기는 불이익은 프로그램 사용자에게 있습니다
