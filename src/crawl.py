@@ -124,16 +124,28 @@ class Coupang:
 
     def input_review_url(self)-> str:
         while True:
-            os.system('clear')
+            # Window
+            os.system('cls')
+            # Mac
+            #os.system('clear')
+            
+            # Review URL
             review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/6451503812?itemId=14007944553&vendorItemId=73528488680&sourceType=srp_product_ads&clickEventId=28aaab30-71e3-4f30-9059-07a29eb1b27f&korePlacement=15&koreSubPlacement=6&q=%EB%9E%A9%EB%85%B8%EC%89%AC&itemsCount=36&searchId=af6bda06076947a39f847ed86a718c34&rank=5&isAddedCart=\n\n:')
             if not review_url :
-                os.system('clear')
+                # Window
+                os.system('cls')
+                # Mac
+                #os.system('clear')
                 print('URL 주소가 입력되지 않았습니다')
                 continue
             return review_url
 
     def input_page_count(self)-> int:
         os.system('clear')
+        # Window
+        os.system('cls')
+        # Mac
+        #os.system('clear')
         while True:
             page_count : str = input('페이지 수를 입력하세요\n\n:')
             if not page_count:
