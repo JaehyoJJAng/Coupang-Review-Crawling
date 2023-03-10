@@ -141,7 +141,6 @@ class Coupang:
             return review_url
 
     def input_page_count(self)-> int:
-        os.system('clear')
         # Window
         os.system('cls')
         # Mac
