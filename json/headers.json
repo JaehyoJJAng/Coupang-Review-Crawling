@@ -10,6 +10,6 @@
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "cookie": "PCID=31489593180081104183684; _fbp=fb.1.1644931520418.1544640325; gd1=Y; X-CP-PT-locale=ko_KR; MARKETID=31489593180081104183684; sid=03ae1c0ed61946c19e760cf1a3d9317d808aca8b; overrideAbTestGroup=%5B%5D; x-coupang-origin-region=KOREA; x-coupang-accept-language=ko_KR;"
+    "cookie": "PCID=20600374265388000708505; X-CP-PT-locale=ko_KR; x-coupang-origin-region=KOREA; _fbp=fb.1.1677984883397.198401886; x-coupang-target-market=KR;"
   }
 }
