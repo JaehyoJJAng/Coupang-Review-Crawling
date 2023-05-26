@@ -125,12 +125,12 @@ class Coupang:
     def input_review_url(self)-> str:
         while True:
             # Window
-            os.system('cls')
+            # os.system('cls')
             # Mac
-            #os.system('clear')
+            os.system('clear')
             
             # Review URL
-            review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/6451503812?itemId=14007944553&vendorItemId=73528488680&sourceType=srp_product_ads&clickEventId=28aaab30-71e3-4f30-9059-07a29eb1b27f&korePlacement=15&koreSubPlacement=6&q=%EB%9E%A9%EB%85%B8%EC%89%AC&itemsCount=36&searchId=af6bda06076947a39f847ed86a718c34&rank=5&isAddedCart=\n\n:')
+            review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=85873964906&q=%ED%9E%98%EB%82%B4%EB%B0%94+%EC%B4%88%EC%BD%94+%EC%8A%A4%EB%8B%88%EC%BB%A4%EC%A6%88&itemsCount=36&searchId=0c5c84d537bc41d1885266961d853179&rank=2&isAddedCart=\n\n:')
             if not review_url :
                 # Window
                 os.system('cls')
@@ -142,9 +142,9 @@ class Coupang:
 
     def input_page_count(self)-> int:
         # Window
-        os.system('cls')
+        # os.system('cls')
         # Mac
-        #os.system('clear')
+        os.system('clear')
         while True:
             page_count : str = input('페이지 수를 입력하세요\n\n:')
             if not page_count:
