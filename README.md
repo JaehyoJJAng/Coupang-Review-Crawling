@@ -51,6 +51,11 @@ $ python3 main.py
 /Users/jaehyolee/PycharmProjects/pythonProject/02_크롤링 프로젝트(Class)/55_쿠팡 상품리뷰 크롤링/쿠팡-상품리뷰-크롤링/힘내바 초코 스니커즈, 40g, 12개.xlsx
 ```
 
+<br>
+
+> ## 출력 결과 | Excel
+
+![image](https://github.com/JaehyoJJAng/githubio.comment/assets/91415701/050415c6-2320-4d01-8d34-abb5358a314c)
 
 ***
 
