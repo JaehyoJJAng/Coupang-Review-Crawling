@@ -141,10 +141,11 @@ class Coupang:
             return review_url
 
     def input_page_count(self)-> int:
-        # Window
-        # os.system('cls')
-        # Mac
-        os.system('clear')
+        command: str = 'clear'
+        if os.name in ('nt','dos'):
+            command = 'cls'
+        os.system(command)
+
         while True:
             page_count : str = input('페이지 수를 입력하세요\n\n:')
             if not page_count:
