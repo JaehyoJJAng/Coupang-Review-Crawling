@@ -71,6 +71,8 @@ class Coupang():
             return [self.fetch(url=url,session=session) for url in URLS]
 
     def fetch(self, url:str, session: rq.Session) -> None:
+        now_page :str = url.split('page=')[-1].split('&')[0]
+        print(f"\n[INFO] Start crawling page {now_page} ...\n")
         with session.get(url=url, headers=self.__headers) as response :
             html = response.text
             soup = bs(html,'html.parser')
