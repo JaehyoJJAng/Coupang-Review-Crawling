@@ -90,6 +90,13 @@ class Coupang():
             for idx in range(article_lenth):
                 dict_data :dict[str, str|int] = dict()
                 articles = soup.select('article.sdp-review__article__list')
+                
+                # 리뷰 날짜
+                review_date = articles[idx].select_one('div.sdp-review__article__list__info__product-info__reg-date')
+                if review_date == None or review_date.text == '':
+                    review_date = '-'
+                else:
+                    review_date = review_date.text.strip()
                     
                 # 구매자 이름
                 user_name = articles[idx].select_one('span.sdp-review__article__list__info__user__name')
@@ -135,6 +142,7 @@ class Coupang():
                     
                 dict_data['title'] = self.title
                 dict_data['prod_name'] = prod_name
+                dict_data['review_date'] = review_date
                 dict_data['user_name'] = user_name
                 dict_data['rating'] = rating
                 dict_data['headline'] = headline
@@ -173,7 +181,7 @@ class SaveData():
     def __init__(self) -> None:
         self.wb :Workbook = Workbook()
         self.ws = self.wb.active
-        self.ws.append(['상품명','구매자 이름','구매자 평점','리뷰 제목','리뷰 내용','맛 만족도'])
+        self.ws.append(['이름','작성일자','평점','리뷰 내용','맛 만족도'])
         self.row :int = 2
         self.dir_name :str = 'Coupang-reviews'
         self.create_directory()
@@ -184,12 +192,11 @@ class SaveData():
 
     def save(self, datas: dict[str, str|int]) -> None:
         file_name :str = os.path.join(self.dir_name, datas['title'] + '.xlsx')
-        self.ws[f"A{self.row}"] = datas['prod_name']
-        self.ws[f"B{self.row}"] = datas['user_name']
+        self.ws[f"A{self.row}"] = datas['user_name']
+        self.ws[f"B{self.row}"] = datas['review_date']
         self.ws[f"C{self.row}"] = datas['rating']
-        self.ws[f"D{self.row}"] = datas['headline']
-        self.ws[f"E{self.row}"] = datas['review_content']
-        self.ws[f"F{self.row}"] = datas['answer']
+        self.ws[f"D{self.row}"] = datas['review_content']
+        self.ws[f"E{self.row}"] = datas['answer']
         self.row += 1
         self.wb.save(filename=file_name)
 
