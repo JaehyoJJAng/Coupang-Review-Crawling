@@ -6,6 +6,7 @@ import os
 import re
 import requests as rq
 import json
+import math
 
 def get_headers(key: str) -> dict[str, dict[str,str]] | None:
     """ Get Headers """
@@ -39,6 +40,12 @@ class Coupang():
         soup = self.get_soup_object(resp=resp)
         return soup.select_one('h1.prod-buy-header__title').text.strip()
     
+    def get_all_review_count(self, prod_code: str) -> int:
+        url = f'https://www.coupang.com/vp/products/{prod_code}'
+        resp = rq.get(url=url, headers=self.__headers)
+        soup = self.get_soup_object(resp=resp)
+        return int(re.sub('[^0-9]', '', soup.select('span.count')[0].text.strip()))
+    
     def start(self) -> None:
         # 폴더 생성
         self.sd.create_directory()
@@ -50,11 +57,13 @@ class Coupang():
         prod_code : str = self.get_product_code(url=URL)
         
         # 상품명
-        self.title = self.get_title(prod_code=prod_code)
+        self.title :str = self.get_title(prod_code=prod_code)
+        
+        # 리뷰 페이지 추출
+        review_pages :int = self.calculate_total_pages(self.get_all_review_count(prod_code=prod_code))
 
         # URL 주소 재가공
-        URLS : list[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
-
+        URLS : list[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1, review_pages + 1)]
         # __headers에 referer 키 추가
         self.__headers['referer'] = URL
 
@@ -154,15 +163,10 @@ class Coupang():
                 continue
             return review_url
 
-    def input_page_count(self)-> int:
-        self.clear_console()
-        while True:
-            page_count : str = input('페이지 수를 입력하세요\n\n:')
-            if not page_count:
-                print('페이지 수가 입력되지 않았습니다\n')
-                continue
-            return int(page_count)
-
+    def calculate_total_pages(self, review_counts: int)-> int:
+        reviews_per_page :int = 5
+        return int(math.ceil(review_counts / reviews_per_page))
+        
 class SaveData():
     def __init__(self) -> None:
         self.wb :Workbook = Workbook()
@@ -177,7 +181,6 @@ class SaveData():
             os.makedirs(self.dir_name)
 
     def save(self, datas: dict[str, str|int]) -> None:
-        print(datas)
         file_name :str = os.path.join(self.dir_name, datas['title'] + '.xlsx')
         self.ws[f"A{self.row}"] = datas['prod_name']
         self.ws[f"B{self.row}"] = datas['user_name']
