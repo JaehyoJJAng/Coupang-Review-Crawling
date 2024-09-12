@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup as bs
 from pathlib import Path
-from typing import Optional,Union,Dict,List
 from openpyxl import Workbook
 import time
 import os
@@ -8,21 +7,15 @@ import re
 import requests as rq
 import json
 
-def get_headers(
-    key: str,
-    default_value: Optional[str] = None
-    )-> Dict[str,Dict[str,str]]:
+def get_headers(key: str) -> dict[str, dict[str,str]] | None:
     """ Get Headers """
     JSON_FILE : str = 'json/headers.json'
-
     with open(JSON_FILE,'r',encoding='UTF-8') as file:
-        headers : Dict[str,Dict[str,str]] = json.loads(file.read())
+        headers = json.loads(file.read())
 
     try :
         return headers[key]
     except:
-        if default_value:
-            return default_value
         raise EnvironmentError(f'Set the {key}')
 
 class Coupang:
@@ -33,9 +26,9 @@ class Coupang:
         return prod_code
 
     def __init__(self)-> None:
-        self.__headers : Dict[str,str] = get_headers(key='headers')
+        self.__headers : dict[str,str] = get_headers(key='headers')
 
-    def main(self)-> List[List[Dict[str,Union[str,int]]]]:
+    def run(self) -> None:
         # URL 주소
         URL : str = self.input_review_url()
 
@@ -43,7 +36,7 @@ class Coupang:
         prod_code : str = self.get_product_code(url=URL)
 
         # URL 주소 재가공
-        URLS : List[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
+        URLS : list[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1,self.input_page_count() + 1)]
 
         # __headers에 referer 키 추가
         self.__headers['referer'] = URL
@@ -51,8 +44,8 @@ class Coupang:
         with rq.Session() as session:
             return [self.fetch(url=url,session=session) for url in URLS]
 
-    def fetch(self,url:str,session)-> List[Dict[str,Union[str,int]]]:
-        save_data : List[Dict[str,Union[str,int]]] = list()
+    def fetch(self,url:str,session) -> list[dict[str, str|int]]:
+        save_data = list()
 
         with session.get(url=url,headers=self.__headers) as response :
             html = response.text
@@ -62,7 +55,7 @@ class Coupang:
             article_lenth = len(soup.select('article.sdp-review__article__list'))
 
             for idx in range(article_lenth):
-                dict_data : Dict[str,Union[str,int]] = dict()
+                dict_data :dict[str, str|int] = dict()
                 articles = soup.select('article.sdp-review__article__list')
 
                 # 구매자 이름
@@ -154,11 +147,14 @@ class Coupang:
 
             return int(page_count)
 
+    def save(self, datas: list[dict[str, str|int]]) -> None:
+        pass
+
 class OpenPyXL:
     @staticmethod
     def save_file()-> None:
         # 크롤링 결과
-        results : List[List[Dict[str,Union[str,int]]]] = Coupang().main()
+        results :list[list[dict[str, str|int]]] = Coupang.main()
 
         wb = Workbook()
         ws = wb.active
