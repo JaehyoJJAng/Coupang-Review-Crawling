@@ -23,11 +23,14 @@ $ python3 main.py
 
 <img width="1417" alt="image" src="https://user-images.githubusercontent.com/91415701/197674856-31baa0b0-90b6-4cf9-9f3b-d5039ddc62ca.png">
 
-<br>
+```shell
+원하시는 상품의 URL 주소를 입력해주세요
 
-<h2>페이지 수 입력</h2>
-<img width="226" alt="image" src="https://user-images.githubusercontent.com/91415701/197675042-c7101429-ae90-4a02-bc49-81807efa69c7.png">
-</hr>
+Ex)
+https://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=85873964906&q=%ED%9E%98%EB%82%B4%EB%B0%94+%EC%B4%88%EC%BD%94+%EC%8A%A4%EB%8B%88%EC%BB%A4%EC%A6%88&itemsCount=36&searchId=0c5c84d537bc41d1885266961d853179&rank=2&isAddedCart=
+
+:
+```
 
 <br>
 
