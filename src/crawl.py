@@ -136,10 +136,9 @@ class Coupang:
             # Review URL
             review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=85873964906&q=%ED%9E%98%EB%82%B4%EB%B0%94+%EC%B4%88%EC%BD%94+%EC%8A%A4%EB%8B%88%EC%BB%A4%EC%A6%88&itemsCount=36&searchId=0c5c84d537bc41d1885266961d853179&rank=2&isAddedCart=\n\n:')
             if not review_url :
-                # Window
-                os.system('cls')
-                # Mac
-                #os.system('clear')
+                # 터미널 초기화
+                self.clear_console()
+                
                 print('URL 주소가 입력되지 않았습니다')
                 continue
             return review_url
