@@ -1,8 +1,10 @@
 # Coupang-Review-Crawling
 
-<p>파이썬을 이용한 쿠팡 리뷰 크롤링 프로그램</p>
+파이썬을 이용한 쿠팡 리뷰 크롤링 프로그램
 
-<h1>설치 | Installation</h1>
+<br>
+
+## 설치 | Installation
 
 ```
 $ git clone https://github.com/JaehyoJJAng/Coupang-Review-Crawling.git
@@ -10,18 +12,20 @@ $ cd Coupang-Review-Crawling
 $ pip install -r ./requirements.txt
 ```
 
-<h1>사용방법 | Usage</h1>
-<p><strong>사용방법 | How to use</strong></p>
+<br>
 
+## 사용방법 | Usage
+
+**How to use**  
 ```
 $ python3 main.py
 ```
 
 <br>
 
-> ## URL 입력<br>
+Enter the URL of the product you want.
 
-<img width="1417" alt="image" src="https://user-images.githubusercontent.com/91415701/197674856-31baa0b0-90b6-4cf9-9f3b-d5039ddc62ca.png">
+<img width="1417" alt="image" src="https://user-images.githubusercontent.com/91415701/197674856-31baa0b0-90b6-4cf9-9f3b-d5039ddc62ca.png">  
 
 ```shell
 원하시는 상품의 URL 주소를 입력해주세요
@@ -36,7 +40,7 @@ https://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=8
 
 ***
 
-> ## 출력 결과 | Print
+## 출력 결과 | Print
 
 ```
 {'prod_name': '힘내바 초코 스니커즈, 40g, 12개', 'user_name': '이명희', 'rating': 4, 'headline': '등록된 헤드라인이 없습니다', 'review_content': '일반 초코바 크기랑 같아요이가 좋지않은데도 씹기힘들지않고사르륵 부서져요안에 건과가 있어서 고소해요얼집에서 일하는데 중간에 당떨어져서생각나서 삿는데 은근히 양이 좀되네요ㅎㅎ', 'answer': '괜찮아요'}
@@ -56,10 +60,12 @@ https://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=8
 
 <br>
 
-> ## 출력 결과 | Excel
+## 출력 결과 | Excel
 
 ![image](https://github.com/JaehyoJJAng/githubio.comment/assets/91415701/050415c6-2320-4d01-8d34-abb5358a314c)
 
 ***
 
-> ## 해당 프로그램을 상업적인 목적으로 이용하여 생기는 불이익은 프로그램 사용자에게 있습니다
+# 🔥 Notice
+
+**해당 프로그램을 상업적인 목적으로 이용하여 생기는 불이익은 프로그램 사용자에게 있습니다**
