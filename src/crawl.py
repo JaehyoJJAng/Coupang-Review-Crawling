@@ -32,6 +32,7 @@ class Coupang():
 
     def __init__(self)-> None:
         self.__headers : dict[str,str] = get_headers(key='headers')
+        self.base_review_url :str = 'https://www.coupang.com/vp/product/reviews'
         self.sd = SaveData()
     
     def get_title(self, prod_code: str) -> str:
@@ -61,19 +62,29 @@ class Coupang():
         
         # 리뷰 페이지 추출
         review_pages :int = self.calculate_total_pages(self.get_all_review_count(prod_code=prod_code))
-
-        # URL 주소 재가공
-        URLS : list[str] = [f'https://www.coupang.com/vp/product/reviews?productId={prod_code}&page={page}&size=5&sortBy=ORDER_SCORE_ASC&ratings=&q=&viRoleCode=3&ratingSummary=true' for page in range(1, review_pages + 1)]
+        
+        # Payload
+        payloads = [{
+            'productId': prod_code,
+            'page': page,
+            'size': 5,
+            'sortBy': 'ORDER_SCORE_ASC',
+            'ratings': '',
+            'q': '',
+            'viRoleCode': 2,
+            'ratingSummary': True
+        } for page in range(1, review_pages + 1)]
+        
         # __headers에 referer 키 추가
         self.__headers['referer'] = URL
 
         with rq.Session() as session:
-            return [self.fetch(url=url,session=session) for url in URLS]
+            [self.fetch(session=session, payload=payload) for payload in payloads]
 
-    def fetch(self, url:str, session: rq.Session) -> None:
-        now_page :str = url.split('page=')[-1].split('&')[0]
+    def fetch(self, session: rq.Session, payload: list[dict]) -> None:
+        now_page :str = payload['page']
         print(f"\n[INFO] Start crawling page {now_page} ...\n")
-        with session.get(url=url, headers=self.__headers) as response :
+        with session.get(url=self.base_review_url, headers=self.__headers, params=payload) as response :
             html = response.text
             soup = bs(html,'html.parser')
             
