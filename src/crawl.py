@@ -22,7 +22,6 @@ def get_headers(key: str) -> dict[str, dict[str,str]] | None:
 class Coupang():
     @staticmethod
     def get_product_code(url: str)-> str:
-        """ 입력받은 URL 주소의 PRODUCT CODE 추출하는 메소드 """
         prod_code : str = url.split('products/')[-1].split('?')[0]
         return prod_code
 
@@ -48,22 +47,16 @@ class Coupang():
         return int(re.sub('[^0-9]', '', soup.select('span.count')[0].text.strip()))
     
     def start(self) -> None:
-        # 폴더 생성
-        self.sd.create_directory()
-        
-        # URL 주소
+        self.sd.create_directory()        
         URL : str = self.input_review_url()
+        self.__headers['referer'] = URL
 
-        # URL의 Product Code 추출
         prod_code : str = self.get_product_code(url=URL)
         
-        # 상품명
         self.title :str = self.get_title(prod_code=prod_code)
-        
-        # 리뷰 페이지 추출
         review_pages :int = self.calculate_total_pages(self.get_all_review_count(prod_code=prod_code))
         
-        # Payload
+        # Set payload
         payloads = [{
             'productId': prod_code,
             'page': page,
@@ -75,9 +68,6 @@ class Coupang():
             'ratingSummary': True
         } for page in range(1, review_pages + 1)]
         
-        # __headers에 referer 키 추가
-        self.__headers['referer'] = URL
-
         with rq.Session() as session:
             [self.fetch(session=session, payload=payload) for payload in payloads]
 
@@ -172,9 +162,7 @@ class Coupang():
 
     def input_review_url(self)-> str:
         while True:
-            self.clear_console()
-            
-            # Review URL
+            self.clear_console()            
             review_url : str = input('원하시는 상품의 URL 주소를 입력해주세요\n\nEx)\nhttps://www.coupang.com/vp/products/7335597976?itemId=18741704367&vendorItemId=85873964906&q=%ED%9E%98%EB%82%B4%EB%B0%94+%EC%B4%88%EC%BD%94+%EC%8A%A4%EB%8B%88%EC%BB%A4%EC%A6%88&itemsCount=36&searchId=0c5c84d537bc41d1885266961d853179&rank=2&isAddedCart=\n\n:')
             if not review_url :
                 # 터미널 초기화
