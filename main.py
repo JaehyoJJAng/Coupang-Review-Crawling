@@ -1,4 +1,5 @@
-from src.crawl import OpenPyXL
+from src.crawl import Coupang
 
 if __name__ == '__main__':
-    OpenPyXL.save_file()
+    coupang = Coupang()
+    coupang.start()
