@@ -54,7 +54,13 @@ class Coupang():
         prod_code : str = self.get_product_code(url=URL)
         
         self.title :str = self.get_title(prod_code=prod_code)
-        review_pages :int = self.calculate_total_pages(self.get_all_review_count(prod_code=prod_code))
+        
+        # 리뷰 수 추출
+        review_count :int = self.get_all_review_count(prod_code=prod_code)
+        if review_count > 1500:
+            review_pages = 300
+        else:
+            review_pages :int = self.calculate_total_pages(review_count)
         
         # Set payload
         payloads = [{
