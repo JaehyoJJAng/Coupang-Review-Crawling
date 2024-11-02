@@ -1,6 +1,6 @@
 {
   "headers": {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Whale/3.20.182.14 Safari/537.36",
-    "Cookie": "delivery_toggle=false; srp_delivery_toggle=true; x-coupang-accept-language=ko-KR; x-coupang-target-market=KR;"
+    "Cookie": "x-coupang-accept-language=ko-KR; x-coupang-target-market=KR;"
   }
 }
