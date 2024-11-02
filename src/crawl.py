@@ -2,12 +2,14 @@ from bs4 import BeautifulSoup as bs
 from pathlib import Path
 from openpyxl import Workbook
 from fake_useragent import UserAgent
+from requests.exceptions import RequestException
 import time
 import os
 import re
 import requests as rq
 import json
 import math
+import sys
 
 
 def get_headers(key: str) -> dict[str, dict[str, str]] | None:
@@ -36,6 +38,8 @@ class Coupang:
         self.__headers: dict[str, str] = get_headers(key="headers")
         self.base_review_url: str = "https://www.coupang.com/vp/product/reviews"
         self.sd = SaveData()
+        self.retries = 5
+        self.delay = 2
 
     def get_product_info(self, prod_code: str) -> dict:
         url = f"https://www.coupang.com/vp/products/{prod_code}"
@@ -75,103 +79,128 @@ class Coupang:
             for page in range(1, review_pages + 1)
         ]
 
-        [self.fetch(payload=payload) for payload in payloads]
+        # 데이터 추출
+        for payload in payloads:
+            self.fetch(payload=payload)
 
     def fetch(self, payload: list[dict]) -> None:
         now_page: str = payload["page"]
         print(f"\n[INFO] Start crawling page {now_page} ...\n")
-        resp = rq.get(url=self.base_review_url, headers=self.__headers, params=payload)
-        html = resp.text
-        soup = bs(html, "html.parser")
+        attempt: int = 0
+        while attempt < self.retries:
+            try:
+                with rq.Session() as session:
+                    with session.get(
+                        url=self.base_review_url,
+                        headers=self.__headers,
+                        params=payload,
+                        timeout=10,
+                    ) as resp:
+                        resp.raise_for_status()
+                        html = resp.text
+                        soup = bs(html, "html.parser")
 
-        # 상품명
-        title = soup.select_one("h1.prod-buy-header__title")
-        if title == None or title.text == "":
-            title = "-"
-        else:
-            title = title.text.strip()
+                        # 상품명
+                        title = soup.select_one("h1.prod-buy-header__title")
+                        if title == None or title.text == "":
+                            title = "-"
+                        else:
+                            title = title.text.strip()
 
-        # Article Boxes
-        article_lenth = len(soup.select("article.sdp-review__article__list"))
+                        # Article Boxes
+                        article_lenth = len(
+                            soup.select("article.sdp-review__article__list")
+                        )
 
-        for idx in range(article_lenth):
-            dict_data: dict[str, str | int] = dict()
-            articles = soup.select("article.sdp-review__article__list")
+                        for idx in range(article_lenth):
+                            dict_data: dict[str, str | int] = dict()
+                            articles = soup.select("article.sdp-review__article__list")
 
-            # 리뷰 날짜
-            review_date = articles[idx].select_one(
-                "div.sdp-review__article__list__info__product-info__reg-date"
-            )
-            if review_date == None or review_date.text == "":
-                review_date = "-"
-            else:
-                review_date = review_date.text.strip()
+                            # 리뷰 날짜
+                            review_date = articles[idx].select_one(
+                                "div.sdp-review__article__list__info__product-info__reg-date"
+                            )
+                            if review_date == None or review_date.text == "":
+                                review_date = "-"
+                            else:
+                                review_date = review_date.text.strip()
 
-            # 구매자 이름
-            user_name = articles[idx].select_one(
-                "span.sdp-review__article__list__info__user__name"
-            )
-            if user_name == None or user_name.text == "":
-                user_name = "-"
-            else:
-                user_name = user_name.text.strip()
+                            # 구매자 이름
+                            user_name = articles[idx].select_one(
+                                "span.sdp-review__article__list__info__user__name"
+                            )
+                            if user_name == None or user_name.text == "":
+                                user_name = "-"
+                            else:
+                                user_name = user_name.text.strip()
 
-            # 평점
-            rating = articles[idx].select_one(
-                "div.sdp-review__article__list__info__product-info__star-orange"
-            )
-            if rating == None:
-                rating = 0
-            else:
-                rating = int(rating.attrs["data-rating"])
+                            # 평점
+                            rating = articles[idx].select_one(
+                                "div.sdp-review__article__list__info__product-info__star-orange"
+                            )
+                            if rating == None:
+                                rating = 0
+                            else:
+                                rating = int(rating.attrs["data-rating"])
 
-            # 구매자 상품명
-            prod_name = articles[idx].select_one(
-                "div.sdp-review__article__list__info__product-info__name"
-            )
-            if prod_name == None or prod_name.text == "":
-                prod_name = "-"
-            else:
-                prod_name = prod_name.text.strip()
+                            # 구매자 상품명
+                            prod_name = articles[idx].select_one(
+                                "div.sdp-review__article__list__info__product-info__name"
+                            )
+                            if prod_name == None or prod_name.text == "":
+                                prod_name = "-"
+                            else:
+                                prod_name = prod_name.text.strip()
 
-            # 헤드라인(타이틀)
-            headline = articles[idx].select_one(
-                "div.sdp-review__article__list__headline"
-            )
-            if headline == None or headline.text == "":
-                headline = "등록된 헤드라인이 없습니다"
-            else:
-                headline = headline.text.strip()
+                            # 헤드라인(타이틀)
+                            headline = articles[idx].select_one(
+                                "div.sdp-review__article__list__headline"
+                            )
+                            if headline == None or headline.text == "":
+                                headline = "등록된 헤드라인이 없습니다"
+                            else:
+                                headline = headline.text.strip()
 
-            # 리뷰 내용
-            review_content = articles[idx].select_one(
-                "div.sdp-review__article__list__review > div"
-            )
-            if review_content == None:
-                review_content = "등록된 리뷰내용이 없습니다"
-            else:
-                review_content = re.sub("[\n\t]", "", review_content.text.strip())
+                            # 리뷰 내용
+                            review_content = articles[idx].select_one(
+                                "div.sdp-review__article__list__review > div"
+                            )
+                            if review_content == None:
+                                review_content = "등록된 리뷰내용이 없습니다"
+                            else:
+                                review_content = re.sub(
+                                    "[\n\t]", "", review_content.text.strip()
+                                )
 
-            # 맛 만족도
-            answer = articles[idx].select_one(
-                "span.sdp-review__article__list__survey__row__answer"
-            )
-            if answer == None or answer.text == "":
-                answer = "맛 평가 없음"
-            else:
-                answer = answer.text.strip()
+                            # 맛 만족도
+                            answer = articles[idx].select_one(
+                                "span.sdp-review__article__list__survey__row__answer"
+                            )
+                            if answer == None or answer.text == "":
+                                answer = "맛 평가 없음"
+                            else:
+                                answer = answer.text.strip()
 
-            dict_data["title"] = self.title
-            dict_data["prod_name"] = prod_name
-            dict_data["review_date"] = review_date
-            dict_data["user_name"] = user_name
-            dict_data["rating"] = rating
-            dict_data["headline"] = headline
-            dict_data["review_content"] = review_content
-            dict_data["answer"] = answer
-            self.sd.save(datas=dict_data)
-            print(dict_data, "\n")
-        time.sleep(2)
+                            dict_data["title"] = self.title
+                            dict_data["prod_name"] = prod_name
+                            dict_data["review_date"] = review_date
+                            dict_data["user_name"] = user_name
+                            dict_data["rating"] = rating
+                            dict_data["headline"] = headline
+                            dict_data["review_content"] = review_content
+                            dict_data["answer"] = answer
+                            self.sd.save(datas=dict_data)
+                            print(dict_data, "\n")
+                        time.sleep(1)
+                        return
+            except RequestException as e:
+                attempt += 1
+                print(f"Attempt {attempt}/{self.retries} failed: {e}")
+                if attempt < self.retries:
+                    time.sleep(self.delay)
+                else:
+                    print(f"최대 요청 만료! 다시 실행하세요.")
+                    sys.exit()
 
     @staticmethod
     def clear_console() -> None:
