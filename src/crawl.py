@@ -41,7 +41,7 @@ class Coupang:
         self.retries = 5
         self.delay = 2
 
-    def get_product_info(self, prod_code: str) -> dict:
+    def get_product_info(self, prod_code: str) -> tuple:
         url = f"https://www.coupang.com/vp/products/{prod_code}"
         resp = rq.get(url=url, headers=self.__headers)
         soup = self.get_soup_object(resp=resp)
