@@ -43,7 +43,7 @@ class Coupang:
 
     def get_product_info(self, prod_code: str) -> tuple:
         url = f"https://www.coupang.com/vp/products/{prod_code}"
-        resp = rq.get(url=url, headers=self.__headers)
+        resp = rq.get(url=url, headers=self.__headers, timeout=10)
         soup = self.get_soup_object(resp=resp)
 
         return (
@@ -58,7 +58,11 @@ class Coupang:
         prod_code: str = self.get_product_code(url=URL)
 
         # 상품 정보 추출
-        self.title, review_count = self.get_product_info(prod_code=prod_code)
+        try:
+            self.title, review_count = self.get_product_info(prod_code=prod_code)
+        except RequestException as e:
+            print({"error": f"서버가 불안정함. 다시 시도해주세요."})
+            sys.exit()
         if review_count > 1500:
             review_pages = 300
         else:
