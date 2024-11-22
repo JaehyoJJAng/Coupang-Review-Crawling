@@ -2,7 +2,16 @@
 
 파이썬을 이용한 쿠팡 리뷰 크롤링 프로그램
 
+
 <br>
+
+# 🟠 This project has been deprecated
+
+- **2024년 11월 22일을 기점으로 더 이상 업데이트 되지 않습니다.**
+
+<h3>🟢 업데이트 관련 PR 환영합니다.</h3>
+
+*** 
 
 ## 설치 | Installation
 
@@ -11,6 +20,14 @@ $ git clone https://github.com/JaehyoJJAng/Coupang-Review-Crawling.git
 $ cd Coupang-Review-Crawling
 $ pip install -r ./requirements.txt
 ```
+
+<br>
+
+## 준비사항
+
+- 구글 크롬 브라우저
+  - [https://www.google.com/chrome/](https://www.google.com/chrome/)
+- 파이썬 `3.7` ↑
 
 <br>
 
